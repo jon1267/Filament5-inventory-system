@@ -6,6 +6,7 @@ use Filament\Http\Middleware\Authenticate;
 use Filament\Http\Middleware\AuthenticateSession;
 use Filament\Http\Middleware\DisableBladeIconComponents;
 use Filament\Http\Middleware\DispatchServingFilamentEvent;
+use Filament\Navigation\NavigationGroup;
 use Filament\Pages\Dashboard;
 use Filament\Panel;
 use Filament\PanelProvider;
@@ -27,7 +28,7 @@ class AdminPanelProvider extends PanelProvider
             ->default()
             ->id('admin')
             ->path('admin')
-
+            // --- Branding ------
             ->brandName('Inventory Management System')
             ->brandLogo(fn (): string => asset('images/logo.png'))
             ->brandLogoHeight('3rem')
@@ -35,11 +36,39 @@ class AdminPanelProvider extends PanelProvider
             // --- Colors ----------------
             ->colors(['primary' => Color::Emerald,])
             // --- Dark Mode off ---------
-            ->darkMode(false)
+            //->darkMode(false)
             // -- SideBar-----------------
             ->sidebarCollapsibleOnDesktop()
             // --- NAVIGATION GROUPS ------
-            ;
+            ->navigationGroups([
+                NavigationGroup::make()->label('Master Data'),
+                NavigationGroup::make()->label('Inventory'),
+                NavigationGroup::make()->label('Transactions'),
+                NavigationGroup::make()->label('Adjustments'),
+                NavigationGroup::make()->label('Reports'),
+                NavigationGroup::make()->label('Settings'),
+            ])
+            // --- LOGIN ------
+            ->login()
+            // --- PAGES ------
+            ->pages([
+                Dashboard::class,
+            ])
+            // --- MIDDLEWARE ------
+            ->middleware([
+                EncryptCookies::class,
+                AddQueuedCookiesToResponse::class,
+                StartSession::class,
+                AuthenticateSession::class,
+                ShareErrorsFromSession::class,
+                PreventRequestForgery::class,
+                SubstituteBindings::class,
+                DisableBladeIconComponents::class,
+                DispatchServingFilamentEvent::class,
+            ])
+            ->authMiddleware([
+                Authenticate::class,
+            ]);
 
     }
 }
