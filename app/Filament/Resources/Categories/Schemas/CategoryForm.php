@@ -24,7 +24,7 @@ class CategoryForm
                             ->placeholder('Select a parent category (optional)')
                             ->options(
                                 Category::whereNull('parent_id')
-                                    ->pluck('id', 'name')
+                                    ->pluck('name', 'id')
                             )
                             ->nullable()
                             ->searchable()

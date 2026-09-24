@@ -22,7 +22,7 @@ class EditCategory extends EditRecord
         return $this->getResource()::getUrl('index'); //return CategoryResource::getUrl('index');
     }
 
-    protected function getCreatedNotificationTitle(): ?string
+    protected function getSavedNotificationTitle(): ?string
     {
         return 'Category updated successfully';
     }
