@@ -16,4 +16,14 @@ class EditSupplier extends EditRecord
             DeleteAction::make(),
         ];
     }
+
+    protected function getRedirectUrl(): string
+    {
+        return $this->getResource()::getUrl('index'); // return parent::getRedirectUrl();
+    }
+
+    protected function getSavedNotificationTitle(): ?string
+    {
+        return 'Supplier updated successfully';
+    }
 }
