@@ -2,13 +2,16 @@
 
 namespace App\Filament\Resources\Products\Tables;
 
+use App\Models\Category;
+use Filament\Actions\EditAction;
+use Filament\Actions\DeleteAction;
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteBulkAction;
-use Filament\Actions\EditAction;
-use Filament\Tables\Columns\IconColumn;
 use Filament\Tables\Columns\ImageColumn;
 use Filament\Tables\Columns\TextColumn;
+use Filament\Tables\Columns\ToggleColumn;
 use Filament\Tables\Table;
+use Filament\Tables\Filters\SelectFilter;
 
 class ProductsTable
 {
@@ -16,45 +19,76 @@ class ProductsTable
     {
         return $table
             ->columns([
+                ImageColumn::make('image')
+                    ->label('Image')
+                    ->circular()
+                    ->defaultImageUrl('/images/no-image.png'),
+
                 TextColumn::make('name')
-                    ->searchable(),
-                TextColumn::make('slug')
-                    ->searchable(),
+                    ->label('Product Name')
+                    ->searchable()
+                    ->sortable(),
+
+
                 TextColumn::make('sku')
                     ->label('SKU')
+                    ->badge()
+                    ->color('gray')
                     ->searchable(),
+
                 TextColumn::make('category.name')
-                    ->searchable(),
-                TextColumn::make('unit.name')
-                    ->searchable(),
+                    ->label('Category')
+                    ->searchable()
+                    ->sortable(),
+
+                TextColumn::make('unit.short_code')
+                    ->label('Unit')
+                    ->badge()
+                    ->color('info'),
+
                 TextColumn::make('cost_price')
-                    ->money()
+                    ->label('Cost Price')
+                    ->money('INR')
                     ->sortable(),
+
                 TextColumn::make('selling_price')
-                    ->money()
+                    ->label('Selling Price')
+                    ->money('INR')
                     ->sortable(),
-                ImageColumn::make('image'),
-                IconColumn::make('status')
-                    ->boolean(),
+
+                ToggleColumn::make('status')
+                    ->label('Status')
+                    ->onColor('success')
+                    ->offColor('danger'),
+
                 TextColumn::make('created_at')
-                    ->dateTime()
-                    ->sortable()
-                    ->toggleable(isToggledHiddenByDefault: true),
-                TextColumn::make('updated_at')
-                    ->dateTime()
+                    ->label('Created At')
+                    ->dateTime('d M Y')
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
             ])
             ->filters([
-                //
+                SelectFilter::make('category_id')
+                    ->label('Category')
+                    ->options(Category::pluck('name', 'id'))
+                    ->placeholder('All Categories'),
+
+                SelectFilter::make('status')
+                    ->label('Status')
+                    ->options([
+                        '1' => 'Active',
+                        '0' => 'Inactive',
+                    ]),
             ])
             ->recordActions([
                 EditAction::make(),
+                DeleteAction::make(),
             ])
             ->toolbarActions([
                 BulkActionGroup::make([
                     DeleteBulkAction::make(),
                 ]),
-            ]);
+            ])
+            ->defaultSort('created_at', 'desc');
     }
 }
