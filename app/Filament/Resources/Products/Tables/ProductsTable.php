@@ -48,12 +48,12 @@ class ProductsTable
 
                 TextColumn::make('cost_price')
                     ->label('Cost Price')
-                    ->money('INR')
+                    ->money('USD')
                     ->sortable(),
 
                 TextColumn::make('selling_price')
                     ->label('Selling Price')
-                    ->money('INR')
+                    ->money('USD')
                     ->sortable(),
 
                 ToggleColumn::make('status')
