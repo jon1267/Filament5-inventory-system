@@ -9,16 +9,25 @@ use App\Filament\Resources\Purchases\Schemas\PurchaseForm;
 use App\Filament\Resources\Purchases\Tables\PurchasesTable;
 use App\Models\Purchase;
 use BackedEnum;
+use UnitEnum;
 use Filament\Resources\Resource;
 use Filament\Schemas\Schema;
-use Filament\Support\Icons\Heroicon;
+// use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Table;
 
 class PurchaseResource extends Resource
 {
     protected static ?string $model = Purchase::class;
 
-    protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedRectangleStack;
+    protected static string|BackedEnum|null $navigationIcon = 'heroicon-o-shopping-cart';
+
+    protected static string|UnitEnum|null $navigationGroup = 'Transactions';
+
+    protected static ?string $navigationLabel = 'Purchases';
+
+    protected static ?int $navigationSort = 1;
+
+    protected static ?string $recordTitleAttribute = 'invoice_no';
 
     public static function form(Schema $schema): Schema
     {
