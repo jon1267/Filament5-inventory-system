@@ -12,8 +12,8 @@ use BackedEnum;
 use UnitEnum;
 use Filament\Resources\Resource;
 use Filament\Schemas\Schema;
-// use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Table;
+use App\Filament\Resources\Purchases\Pages\ViewPurchase;
 
 class PurchaseResource extends Resource
 {
@@ -52,6 +52,7 @@ class PurchaseResource extends Resource
             'index' => ListPurchases::route('/'),
             'create' => CreatePurchase::route('/create'),
             'edit' => EditPurchase::route('/{record}/edit'),
+            'view' => ViewPurchase::route('/{record}'),
         ];
     }
 }
