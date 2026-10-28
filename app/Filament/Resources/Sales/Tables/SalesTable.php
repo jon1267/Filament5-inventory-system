@@ -2,10 +2,14 @@
 
 namespace App\Filament\Resources\Sales\Tables;
 
+use App\Models\Customer;
+use App\Models\Warehouse;
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\EditAction;
+use Filament\Actions\DeleteAction;
 use Filament\Tables\Columns\TextColumn;
+use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Table;
 
 class SalesTable
@@ -14,45 +18,85 @@ class SalesTable
     {
         return $table
             ->columns([
-                TextColumn::make('customer.name')
-                    ->searchable(),
-                TextColumn::make('warehouse.name')
-                    ->searchable(),
+
                 TextColumn::make('invoice_no')
-                    ->searchable(),
+                    ->label('Invoice No')
+                    ->searchable()
+                    ->sortable(),
+
+                TextColumn::make('customer.name')
+                    ->label('Customer')
+                    ->searchable()
+                    ->sortable(),
+
+                TextColumn::make('warehouse.name')
+                    ->label('Warehouse')
+                    ->searchable()
+                    ->sortable(),
+
                 TextColumn::make('sale_date')
-                    ->date()
+                    ->label('Sale Date')
+                    ->date('d M Y')
                     ->sortable(),
+
+                TextColumn::make('items_count')
+                    ->label('Products')
+                    ->counts('items')
+                    ->badge()
+                    ->color('info'),
+
                 TextColumn::make('total_amount')
-                    ->numeric()
+                    ->label('Total')
+                    ->money('USD')
                     ->sortable(),
-                TextColumn::make('paid_amount')
-                    ->numeric()
-                    ->sortable(),
+
                 TextColumn::make('due_amount')
-                    ->numeric()
+                    ->label('Due')
+                    ->money('USD')
+                    ->color(fn ($state) => $state > 0 ? 'danger' : 'success')
                     ->sortable(),
+
                 TextColumn::make('status')
-                    ->searchable(),
+                    ->label('Status')
+                    ->badge()
+                    ->color(fn (string $state): string => match ($state) {
+                        'pending' => 'warning',
+                        'completed' => 'success',
+                    }),
+
                 TextColumn::make('created_at')
-                    ->dateTime()
-                    ->sortable()
-                    ->toggleable(isToggledHiddenByDefault: true),
-                TextColumn::make('updated_at')
-                    ->dateTime()
+                    ->label('Created At')
+                    ->dateTime('d M Y')
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
             ])
             ->filters([
-                //
+                SelectFilter::make('customer_id')
+                    ->label('Customer')
+                    ->options(Customer::pluck('name', 'id'))
+                    ->placeholder('All Customers'),
+
+                SelectFilter::make('warehouse_id')
+                    ->label('Warehouse')
+                    ->options(Warehouse::pluck('name', 'id'))
+                    ->placeholder('All Warehouses'),
+
+                SelectFilter::make('status')
+                    ->label('Status')
+                    ->options([
+                        'pending' => 'Pending',
+                        'complted' => 'Completed',
+                    ]),
             ])
             ->recordActions([
                 EditAction::make(),
+                DeleteAction::make(),
             ])
             ->toolbarActions([
                 BulkActionGroup::make([
                     DeleteBulkAction::make(),
                 ]),
-            ]);
+            ])
+            ->defaultSort('created_at', 'desc');
     }
 }
