@@ -7,6 +7,7 @@ use App\Filament\Resources\Sales\Pages\EditSale;
 use App\Filament\Resources\Sales\Pages\ListSales;
 use App\Filament\Resources\Sales\Schemas\SaleForm;
 use App\Filament\Resources\Sales\Tables\SalesTable;
+use App\Filament\Resources\Sales\Pages\ViewSale;
 use App\Models\Sale;
 use BackedEnum;
 use Filament\Resources\Resource;
@@ -50,6 +51,7 @@ class SaleResource extends Resource
         return [
             'index' => ListSales::route('/'),
             'create' => CreateSale::route('/create'),
+            'view'   => ViewSale::route('/{record}'),
             'edit' => EditSale::route('/{record}/edit'),
         ];
     }
